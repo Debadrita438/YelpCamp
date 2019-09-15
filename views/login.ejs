@@ -1,0 +1,22 @@
+<!-- Header goes here -->
+<% include ./partials/header %>
+
+<!-- The contents -->
+<div class="row">
+	<div class="col-md-12">
+		<form class="form-signin" action="/login" method="POST">
+			<h1 class="h1 mb-4 font-weight-medium text-center">Login</h1>
+			<input type="text" id="inputUsername" class="form-control" name="username" placeholder="Username" required autofocus>
+			<input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Login!</button>
+		</form>
+		<div class="form-signin">
+			<a href="/campgrounds">Go Back</a>
+			<hr>
+			<p>Did you forget your password? Click <a href="/forgot">Forgot Password</a></p>    
+		</div>
+	</div>
+</div>
+
+<!-- Footer goes here -->
+<% include ./partials/footer %>
