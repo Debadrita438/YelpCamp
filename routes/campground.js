@@ -5,12 +5,6 @@ const express    = require("express"),
       Review     = require("../models/review"),
       middleware = require("../middleware");
 
-
-// Define escapeRegex function for search feature
-function escapeRegex(text) {
-	return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
-
 //INDEX - show all campgrounds
 router.get("/", (req, res) => {
 	if(req.query.search && req.xhr) {
@@ -18,7 +12,7 @@ router.get("/", (req, res) => {
 		// Get all campgrounds from database
 		Campground.find({name: regex}, (err, allCampgrounds) => {
 			if(err){
-				console.log(err);
+				req.flash("error", err.message);
 			} else {
 				res.status(200).json(allCampgrounds);
 			}
@@ -27,7 +21,7 @@ router.get("/", (req, res) => {
 		// Get all campgrounds from database
 		Campground.find({}, (err, allCampgrounds) => {
 			if(err){
-				console.log(err);
+				req.flash("error", err.message);
 			} else {
 				if(req.xhr) {
 					res.json(allCampgrounds);
@@ -120,7 +114,7 @@ router.delete("/:id", (req, res) => {
 		}, (err, comments) => {
 			req.flash('success', campground.name + ' deleted!');
 			// deletes all reviews associated with the campground
-			Review.deleteMany({"_id": {$in: campground.reviews}}, function (err) {
+			Review.deleteMany({"_id": {$in: campground.reviews}}, (err) => {
 				if (err) {
 					req.flash("error", err.message);
 					res.redirect("/campgrounds");

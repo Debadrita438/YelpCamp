@@ -9,7 +9,7 @@ router.get("/new", middleware.isLoggedIn, (req, res) => {
 	// find campground by id
 	Campground.findById(req.params.id, (err, campground) => {
 		if(err){
-			console.log(err);
+			req.flash("error", err.message);
 		}
 		else {
 			res.render("comments/new", {campground: campground});
@@ -22,13 +22,13 @@ router.post("/", middleware.isLoggedIn, (req, res) => {
 	//Find the specific campground using ID
 	Campground.findById(req.params.id, (err, campground) => { 
 		if(err){
-			console.log(err);
+			req.flash("error", err.message);
 			res.redirect("/campgrounds");
 		}
 		else {
 			Comment.create(req.body.comment, (err, comment) => {
 				if(err){
-					console.log(err);
+					req.flash("error", err.message);
 				} 
 				else {
 					//add username and id to comment
@@ -51,7 +51,7 @@ router.get("/:commentId/edit", middleware.isLoggedIn, (req, res) => {
 	// find campground by id
 	Comment.findById(req.params.commentId, (err, comment) => {
 		if(err){
-			console.log(err);
+			req.flash("error", err.message);
 		} 
 		else {
 			res.render("comments/edit", {campground_id: req.params.id, comment: comment});
@@ -61,9 +61,9 @@ router.get("/:commentId/edit", middleware.isLoggedIn, (req, res) => {
 
 // UPDATE - update the comment
 router.put("/:commentId", (req, res) => {
-	Comment.findByIdAndUpdate(req.params.commentId, req.body.comment, function(err, comment){
+	Comment.findByIdAndUpdate(req.params.commentId, req.body.comment, (err, comment) => {
 		if(err){
-			console.log(err);
+			req.flash("error", err.message);
 			res.render("edit");
 		} 
 		else {
@@ -76,7 +76,7 @@ router.put("/:commentId", (req, res) => {
 router.delete("/:commentId", middleware.checkUserComment, (req, res) => {
 	Comment.findByIdAndRemove(req.params.commentId, (err, comment) => {
 		if(err){
-			console.log(err);
+			req.flash("error", err.message);
 		}
 		else {
 			Campground.findByIdAndUpdate(req.params.id, {
@@ -85,7 +85,7 @@ router.delete("/:commentId", middleware.checkUserComment, (req, res) => {
 				}
 			}, (err) => {
 				if(err){ 
-					console.log(err)
+					req.flash("error", err.message);
 				}
 				else {
 					req.flash('success', 'Your comment has been deleted successfully!');
